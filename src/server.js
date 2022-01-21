@@ -1,4 +1,6 @@
 import express from "express";
+import http from "http";
+import WebSocket from "ws";
 
 const app = express();
 
@@ -11,4 +13,8 @@ app.get("/*", (req, res) => res.redirect("/"));
 
 const handleListen = () => console.log(`Listening ~`);
 
-app.listen(3000, handleListen);
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+// 하나의 서버에서 http 서버, ws 서버 두개의 프로토콜 돌리기
+
+server.listen(3000, handleListen);
