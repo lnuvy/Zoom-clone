@@ -17,4 +17,9 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 // 하나의 서버에서 http 서버, ws 서버 두개의 프로토콜 돌리기
 
+function handleConnection(socket) {
+  console.log(socket);
+}
+wss.on("connection", handleConnection);
+
 server.listen(3000, handleListen);
