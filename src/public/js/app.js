@@ -5,7 +5,7 @@ wss.addEventListener("open", () => {
 });
 
 wss.addEventListener("message", (message) => {
-  console.log("New Message: ", message, " from the Server");
+  console.log("New Message: ", message.data, " from the Server");
 });
 
 setTimeout(() => {
