@@ -1,7 +1,6 @@
 import express from "express";
 import http from "http";
-import { parse } from "path";
-import WebSocket from "ws";
+import SocketIO from "socket.io";
 
 const app = express();
 
@@ -15,33 +14,10 @@ app.get("/*", (req, res) => res.redirect("/"));
 const handleListen = () => console.log(`Listening ~`);
 
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
-// 하나의 서버에서 http 서버, ws 서버 두개의 프로토콜 돌리기
+const io = SocketIO(server);
 
-function onSocketClose() {
-  console.log("Disconnected from the Browser...");
-}
-
-const sockets = [];
-
-wss.on("connection", (socket) => {
-  sockets.push(socket);
-  socket["nickname"] = "Anonymous";
-  console.log("Connected to Browser !");
-  socket.on("close", onSocketClose);
-  socket.on("message", (msg) => {
-    const message = JSON.parse(msg.toString());
-    switch (message.type) {
-      case "new_message":
-        sockets.forEach((aSocket) =>
-          aSocket.send(`${socket.nickname}: ${message.payload}`)
-        );
-        break;
-      case "nickname":
-        socket["nickname"] = message.payload;
-        break;
-    }
-  });
+io.on("connection", (socket) => {
+  console.log(socket);
 });
 
 server.listen(3000, handleListen);
