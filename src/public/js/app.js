@@ -1,4 +1,4 @@
-const meesageList = document.querySelector("ul");
+const messageList = document.querySelector("ul");
 const messageForm = document.querySelector("form");
 const wss = new WebSocket(`ws://${window.location.host}`);
 
@@ -7,7 +7,9 @@ wss.addEventListener("open", () => {
 });
 
 wss.addEventListener("message", (message) => {
-  console.log("New Message: ", message.data);
+  const li = document.createElement("li");
+  li.innerText = message.data;
+  messageList.append(li);
 });
 
 wss.addEventListener("close", () => {

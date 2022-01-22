@@ -30,7 +30,6 @@ wss.on("connection", (socket) => {
   socket.on("message", (message) => {
     sockets.forEach((aSocket) => {
       aSocket.send(message.toString());
-      console.log(message.toString());
     });
   });
   socket.send("hello!!!");
