@@ -33,6 +33,7 @@ function handleNickSubmit(event) {
   event.preventDefault();
   const input = nickForm.querySelector("input");
   wss.send(makeMessage("nickname", input.value));
+  input.value = "";
 }
 
 messageForm.addEventListener("submit", handleSubmit);
