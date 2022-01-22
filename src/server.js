@@ -17,14 +17,18 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 // 하나의 서버에서 http 서버, ws 서버 두개의 프로토콜 돌리기
 
+function onSocketClose() {
+  console.log("Disconnected from the Browser...");
+}
+
+function onSocketMessage(message) {
+  console.log(message);
+}
+
 wss.on("connection", (socket) => {
   console.log("Connected to Browser !");
-  socket.on("close", () => {
-    console.log("Disconnected from the Browser...");
-  });
-  socket.on("message", (message) => {
-    console.log(`New message from Browser: ${message}`);
-  });
+  socket.on("close", onSocketClose);
+  socket.on("message", onSocketMessage);
   socket.send("hello!!!");
 });
 
