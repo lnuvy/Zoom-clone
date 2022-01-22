@@ -42,7 +42,6 @@ wss.on("connection", (socket) => {
         break;
     }
   });
-  socket.send("hello!!!");
 });
 
 server.listen(3000, handleListen);
