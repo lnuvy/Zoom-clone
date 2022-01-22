@@ -1,6 +1,5 @@
 const meesageList = document.querySelector("ul");
 const messageForm = document.querySelector("form");
-
 const wss = new WebSocket(`ws://${window.location.host}`);
 
 wss.addEventListener("open", () => {

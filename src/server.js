@@ -21,14 +21,13 @@ function onSocketClose() {
   console.log("Disconnected from the Browser...");
 }
 
-function onSocketMessage(message) {
-  console.log(message);
-}
-
 wss.on("connection", (socket) => {
   console.log("Connected to Browser !");
   socket.on("close", onSocketClose);
-  socket.on("message", onSocketMessage);
+  socket.on("message", (message) => {
+    socket.send(message.toString());
+    console.log(message.toString());
+  });
   socket.send("hello!!!");
 });
 
