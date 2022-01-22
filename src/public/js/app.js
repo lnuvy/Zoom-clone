@@ -1,3 +1,6 @@
+const meesageList = document.querySelector("ul");
+const messageForm = document.querySelector("form");
+
 const wss = new WebSocket(`ws://${window.location.host}`);
 
 wss.addEventListener("open", () => {
@@ -8,10 +11,15 @@ wss.addEventListener("message", (message) => {
   console.log("New Message: ", message.data, " from the Server");
 });
 
-setTimeout(() => {
-  wss.send("hello from the browser!");
-}, 5000);
-
 wss.addEventListener("close", () => {
   console.log("DDDDDD");
 });
+
+function handleSubmit(event) {
+  event.preventDefault();
+  const input = messageForm.querySelector("input");
+  wss.send(input.value);
+  input.value = "";
+}
+
+messageForm.addEventListener("submit", handleSubmit);
