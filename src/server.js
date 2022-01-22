@@ -17,7 +17,9 @@ const server = http.createServer(app);
 const io = SocketIO(server);
 
 io.on("connection", (socket) => {
-  console.log(socket);
+  socket.on("enter_room", (msg) => {
+    console.log(msg);
+  });
 });
 
 server.listen(3000, handleListen);
