@@ -8,6 +8,7 @@ const room = document.getElementById("room");
 
 let chatRoomName;
 let nick = "Anon";
+let myPeerConnection;
 
 room.hidden = true;
 
@@ -183,10 +184,11 @@ camerasSelect.addEventListener("input", handleCameraChange);
 
 welcomeVideoForm = welcomeVideo.querySelector("form");
 
-function startMedia() {
+async function startMedia() {
   welcomeVideo.hidden = true;
   call.hidden = false;
-  getMedia();
+  await getMedia();
+  makeConnection();
 }
 
 function handleWelcomeVideoSubmit(event) {
@@ -198,3 +200,24 @@ function handleWelcomeVideoSubmit(event) {
 }
 
 welcomeVideoForm.addEventListener("submit", handleWelcomeVideoSubmit);
+
+// 에러 주의
+socket.on("welcome", async () => {
+  const offer = await myPeerConnection.createOffer();
+  myPeerConnection.setLocalDescription(offer);
+  console.log("sent the offer...");
+  socket.emit("offer", offer, videoRoomName);
+});
+
+socket.on("offer", (offer) => {
+  console.log(offer);
+});
+
+// RTC code
+
+function makeConnection() {
+  myPeerConnection = new RTCPeerConnection();
+  myStream
+    .getTracks()
+    .forEach((track) => myPeerConnection.addTrack(track, myStream));
+}
