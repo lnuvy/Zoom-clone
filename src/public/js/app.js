@@ -1,12 +1,30 @@
 const socket = io();
 
 const welcome = document.getElementById("welcome");
-const form = welcome.querySelector("form");
+const roomNo = welcome.querySelector("#roomNo");
+const nickForm = welcome.querySelector("#name");
 const room = document.getElementById("room");
+
+let roomName;
+let nick = "Anon";
 
 room.hidden = true;
 
-let roomName;
+function showRoom() {
+  welcome.hidden = true;
+  room.hidden = false;
+  const h3 = room.querySelector("h3");
+  h3.innerText = `Room ${roomName}`;
+  const msgForm = room.querySelector("#msg");
+  msgForm.addEventListener("submit", handleMessageSubmit);
+}
+
+function changeNickname(nick) {
+  const h3 = welcome.querySelector("h3");
+  h3.innerText = `Now Your Nickname: ${nick}`;
+  const nameForm = welcome.querySelector("#name");
+  nameForm.addEventListener("submit", handleNicknameSubmit);
+}
 
 function addMessage(message) {
   const ul = room.querySelector("ul");
@@ -27,31 +45,21 @@ function handleMessageSubmit(event) {
 
 function handleNicknameSubmit(event) {
   event.preventDefault();
-  const input = room.querySelector("#name input");
-  const name = input.value;
-  socket.emit("nickname", name);
-}
-
-function showRoom() {
-  welcome.hidden = true;
-  room.hidden = false;
-  const h3 = room.querySelector("h3");
-  h3.innerText = `Room ${roomName}`;
-  const msgForm = room.querySelector("#msg");
-  const nameForm = room.querySelector("#name");
-  msgForm.addEventListener("submit", handleMessageSubmit);
-  nameForm.addEventListener("submit", handleNicknameSubmit);
+  const input = welcome.querySelector("#name input");
+  nick = input.value;
+  socket.emit("nickname", nick, changeNickname(nick));
 }
 
 function handleRoomSubmit(event) {
   event.preventDefault();
-  const input = form.querySelector("input");
+  const input = roomNo.querySelector("input");
   socket.emit("enter_room", input.value, showRoom);
   roomName = input.value;
   input.value = "";
 }
 
-form.addEventListener("submit", handleRoomSubmit);
+nickForm.addEventListener("submit", handleNicknameSubmit);
+roomNo.addEventListener("submit", handleRoomSubmit);
 
 socket.on("welcome", (user) => {
   addMessage(`${user}님이 입장했습니다.`);

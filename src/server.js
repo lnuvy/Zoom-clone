@@ -31,6 +31,7 @@ io.on("connection", (socket) => {
     done();
   });
   socket.on("nickname", (nickname) => (socket["nickname"] = nickname));
+
   socket.on("disconnecting", () => {
     socket.rooms.forEach((room) =>
       socket.to(room).emit("bye", socket.nickname)
