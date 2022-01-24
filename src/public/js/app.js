@@ -1,5 +1,6 @@
 const socket = io();
 
+// 채팅
 const welcome = document.getElementById("welcome");
 const roomNo = welcome.querySelector("#roomNo");
 const nickForm = welcome.querySelector("#name");
@@ -87,3 +88,23 @@ socket.on("room_change", (rooms) => {
     roomList.append(li);
   });
 });
+
+// video
+
+const myFace = document.getElementById("myFace");
+
+let myStream;
+
+async function getMedia() {
+  try {
+    myStream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: true,
+    });
+    myFace.srcObject = myStream;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+getMedia();
