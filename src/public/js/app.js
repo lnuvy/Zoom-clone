@@ -6,7 +6,7 @@ const roomNo = welcome.querySelector("#roomNo");
 const nickForm = welcome.querySelector("#name");
 const room = document.getElementById("room");
 
-let roomName;
+let chatRoomName;
 let nick = "Anon";
 
 room.hidden = true;
@@ -15,7 +15,7 @@ function showRoom() {
   welcome.hidden = true;
   room.hidden = false;
   const h3 = room.querySelector("h3");
-  h3.innerText = `Room ${roomName}`;
+  h3.innerText = `Room ${chatRoomName}`;
   const msgForm = room.querySelector("#msg");
   msgForm.addEventListener("submit", handleMessageSubmit);
 }
@@ -38,7 +38,7 @@ function handleMessageSubmit(event) {
   event.preventDefault();
   const input = room.querySelector("#msg input");
   const msg = input.value;
-  socket.emit("new_message", input.value, roomName, () => {
+  socket.emit("new_message", input.value, chatRoomName, () => {
     addMessage(`You: ${msg}`);
   });
   input.value = "";
@@ -55,7 +55,7 @@ function handleRoomSubmit(event) {
   event.preventDefault();
   const input = roomNo.querySelector("input");
   socket.emit("enter_room", input.value, showRoom);
-  roomName = input.value;
+  chatRoomName = input.value;
   input.value = "";
 }
 
@@ -64,13 +64,13 @@ roomNo.addEventListener("submit", handleRoomSubmit);
 
 socket.on("welcome", (user, newCount) => {
   const h3 = room.querySelector("h3");
-  h3.innerText = `Room ${roomName} (${newCount})`;
+  h3.innerText = `Room ${chatRoomName} (${newCount})`;
   addMessage(`${user}님이 입장했습니다.`);
 });
 
 socket.on("bye", (left, newCount) => {
   const h3 = room.querySelector("h3");
-  h3.innerText = `Room ${roomName} (${newCount})`;
+  h3.innerText = `Room ${chatRoomName} (${newCount})`;
   addMessage(`${left}님이 방에서 나갔습니다.`);
 });
 
@@ -103,6 +103,7 @@ call.hidden = true;
 let myStream;
 let muted = false;
 let cameraOff = false;
+let videoRoomName;
 
 async function getMedia(deviceId) {
   const initialConstrains = {
@@ -192,6 +193,7 @@ function handleWelcomeVideoSubmit(event) {
   event.preventDefault();
   const input = welcomeVideoForm.querySelector("input");
   socket.emit("join_VideoRoom", input.value, startMedia);
+  videoRoomName = input.value;
   input.value = "";
 }
 
