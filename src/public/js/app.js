@@ -110,8 +110,23 @@ async function getMedia() {
     console.log(e);
   }
 }
-
 getMedia();
+
+async function getCameras() {
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const cameras = devices.filter((device) => device.kind === "videoinput");
+    cameras.forEach((camera) => {
+      const option = document.createElement("option");
+      option.value = camera.deviceId;
+      option.innerText = camera.label;
+      camerasSelect.appendChild(option);
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
+getCameras();
 
 function handleMuteClick() {
   myStream
@@ -126,24 +141,6 @@ function handleMuteClick() {
   }
 }
 
-async function getCameras() {
-  try {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const cameras = devices.filter((device) => device.kind === "videoinput");
-    console.log(cameras);
-    cameras.forEach((camera) => {
-      const option = document.createElement("option");
-      option.value = camera.deviceId;
-      option.innerText = camera.label;
-      camerasSelect.appendChild(option);
-    });
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-getCameras();
-
 function handleCameraClick() {
   myStream
     .getVideoTracks()
@@ -157,5 +154,10 @@ function handleCameraClick() {
   }
 }
 
+function handleCameraChange() {
+  console.log(camerasSelect.value);
+}
+
 muteBtn.addEventListener("click", handleMuteClick);
 cameraBtn.addEventListener("click", handleCameraClick);
+camerasSelect.addEventListener("input", handleCameraChange);
