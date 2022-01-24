@@ -184,17 +184,18 @@ camerasSelect.addEventListener("input", handleCameraChange);
 
 welcomeVideoForm = welcomeVideo.querySelector("form");
 
-async function startMedia() {
+async function initCall() {
   welcomeVideo.hidden = true;
   call.hidden = false;
   await getMedia();
   makeConnection();
 }
 
-function handleWelcomeVideoSubmit(event) {
+async function handleWelcomeVideoSubmit(event) {
   event.preventDefault();
   const input = welcomeVideoForm.querySelector("input");
-  socket.emit("join_VideoRoom", input.value, startMedia);
+  await initCall();
+  socket.emit("join_VideoRoom", input.value);
   videoRoomName = input.value;
   input.value = "";
 }
@@ -209,12 +210,18 @@ socket.on("welcome", async () => {
   socket.emit("offer", offer, videoRoomName);
 });
 
-socket.on("offer", (offer) => {
-  console.log(offer);
+socket.on("offer", async (offer) => {
+  myPeerConnection.setRemoteDescription(offer);
+  const answer = await myPeerConnection.createAnswer();
+  myPeerConnection.setLocalDescription(answer);
+  socket.emit("answer", answer, videoRoomName);
+});
+
+socket.on("answer", (answer) => {
+  myPeerConnection.setRemoteDescription(answer);
 });
 
 // RTC code
-
 function makeConnection() {
   myPeerConnection = new RTCPeerConnection();
   myStream
