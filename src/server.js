@@ -16,9 +16,26 @@ const handleListen = () => console.log(`Listening ~`);
 const server = http.createServer(app);
 const io = SocketIO(server);
 
+// Room을 모두 찾아서 private 이 아닌 Room 만 Retrun
+function publicRooms() {
+  const {
+    sockets: {
+      adapter: { sids, rooms },
+    },
+  } = io;
+  const publicRooms = [];
+  rooms.forEach((_, key) => {
+    if (sids.get(key) === undefined) {
+      publicRooms.push(key);
+    }
+  });
+  return publicRooms;
+}
+
 io.on("connection", (socket) => {
   socket["nickname"] = "Anon";
   socket.onAny((event) => {
+    console.log(io.sockets.adapter);
     console.log(`Socket Event: ${event}`);
   });
   socket.on("enter_room", (roomName, done) => {
