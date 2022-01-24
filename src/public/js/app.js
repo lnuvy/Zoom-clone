@@ -95,6 +95,11 @@ const muteBtn = document.getElementById("mute");
 const cameraBtn = document.getElementById("camera");
 const camerasSelect = document.getElementById("cameras");
 
+const welcomeVideo = document.getElementById("welcomeVideo");
+const call = document.getElementById("call");
+
+call.hidden = true;
+
 let myStream;
 let muted = false;
 let cameraOff = false;
@@ -120,7 +125,6 @@ async function getMedia(deviceId) {
     console.log(e);
   }
 }
-getMedia();
 
 async function getCameras() {
   try {
@@ -175,3 +179,20 @@ async function handleCameraChange() {
 muteBtn.addEventListener("click", handleMuteClick);
 cameraBtn.addEventListener("click", handleCameraClick);
 camerasSelect.addEventListener("input", handleCameraChange);
+
+welcomeVideoForm = welcomeVideo.querySelector("form");
+
+function startMedia() {
+  welcomeVideo.hidden = true;
+  call.hidden = false;
+  getMedia();
+}
+
+function handleWelcomeVideoSubmit(event) {
+  event.preventDefault();
+  const input = welcomeVideoForm.querySelector("input");
+  socket.emit("join_VideoRoom", input.value, startMedia);
+  input.value = "";
+}
+
+welcomeVideoForm.addEventListener("submit", handleWelcomeVideoSubmit);

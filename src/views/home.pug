@@ -28,12 +28,19 @@ html(lang="en")
           input(placeholder="message", required, type="text")
           button Send
       br
-      div#myStream
-        video#myFace(autoplay, playsinline, width="400", height="400")
-        button#mute Mute
-        button#camera Turn Camera Off
-        select#cameras
-          option(value="asdf") 가짜 카메라
+      hr
+      br
+      div#welcomeVideo
+        form#videoRooms
+          input(placeholder="Video room name...", required, type="text")
+          button Enter Room
+      div#call
+        div#myStream
+          video#myFace(autoplay, playsinline, width="400", height="400")
+          button#mute Mute
+          button#camera Turn Camera Off
+          select#cameras
+            option(value="asdf") 가짜 카메라
 
     script(src="/socket.io/socket.io.js")
     script(src="/public/js/app.js")

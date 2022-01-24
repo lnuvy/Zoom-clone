@@ -65,4 +65,11 @@ io.on("connection", (socket) => {
   });
 });
 
+io.on("connection", (socket) => {
+  socket.on("join_VideoRoom", (roomName, done) => {
+    socket.join(roomName);
+    done();
+  });
+});
+
 server.listen(3000, handleListen);
