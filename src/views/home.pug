@@ -28,7 +28,10 @@ html(lang="en")
           input(placeholder="message", required, type="text")
           button Send
       br
-      video#myFace(autoplay, playsinline, width="400", height="400")
+      div#myStream
+        video#myFace(autoplay, playsinline, width="400", height="400")
+        button#mute Mute
+        button#camera Turn Camera Off
       
 
     script(src="/socket.io/socket.io.js")
